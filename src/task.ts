@@ -8,7 +8,12 @@ type Task = {
     isCompleted: boolean
 }
 
-const tasks: Task[] = []
+function loadTasks(): Task[] {
+    const storedItems = localStorage.getItem('tasks')
+    return storedItems ? JSON.parse(storedItems) : []
+}
+const tasks: Task[] = loadTasks();
+tasks.forEach(renderTask)
 function createTask(event: SubmitEvent) {
     event.preventDefault()
     const taskDescription = formInput.value
@@ -34,6 +39,10 @@ function addTask(task: Task): void {
 }
 function renderTask(task:Task):void{
    const taskElement= document.createElement('li')
+   const input= document.createElement('input')
+   input.type='checkbox'
+   input.checked= task.isCompleted
+   taskElement.appendChild(input)
    taskElement.textContent=task.description
    taskListElement?.appendChild(taskElement)
 
