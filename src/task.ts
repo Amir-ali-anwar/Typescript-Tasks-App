@@ -39,10 +39,14 @@ function addTask(task: Task): void {
 }
 function renderTask(task:Task):void{
    const taskElement= document.createElement('li')
-   const input= document.createElement('input')
-   input.type='checkbox'
-   input.checked= task.isCompleted
-   taskElement.appendChild(input)
+   const iconElement= document.createElement('i')
+   console.log({iconElement});
+   
+    iconElement.setAttribute('class','fa-solid fa-user')
+//    input.type='checkbox'
+//    input.checked= task.isCompleted
+   taskElement.appendChild(iconElement)
+   taskElement.appendChild(iconElement)
    taskElement.textContent=task.description
    taskListElement?.appendChild(taskElement)
 
