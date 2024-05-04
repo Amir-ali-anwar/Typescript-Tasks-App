@@ -9,7 +9,15 @@ type Task = {
   description: string;
   isCompleted: boolean;
 };
+type ThemeTyes={
+  newBackgroundColor:string,
+  newTextColor:string,
+  newWhiteColor:string
 
+}
+document.addEventListener("DOMContentLoaded", function () {
+  const theme = getThemeFromLocalStorage();
+});
 function loadTasks(): Task[] {
   const storedItems = localStorage.getItem("tasks");
   return storedItems ? JSON.parse(storedItems) : [];
@@ -63,6 +71,12 @@ function toggleTheme(event: Event): void {
     root.style.setProperty('--background-color', newBackgroundColor);
     root.style.setProperty('--text-color', newTextColor);
     root.style.setProperty('--white', newWhiteColor);
+    const themevalues={
+      newBackgroundColor,
+      newTextColor,
+      newWhiteColor
+    }
+    UpdateThemeLocalStorage(themevalues)
   }
 }
 
@@ -84,5 +98,12 @@ function renderTask(task: Task): void {
 }
 function updateStorage(): void {
   localStorage.setItem("tasks", JSON.stringify(tasks));
+}
+function UpdateThemeLocalStorage(theme:ThemeTyes):void{
+  localStorage.setItem('theme', JSON.stringify(theme))
+}
+function getThemeFromLocalStorage():ThemeTyes[]{
+  const storedItems = localStorage.getItem("theme");
+  return storedItems ? JSON.parse(storedItems) : [];
 }
 taskForm?.addEventListener("submit", createTask);
