@@ -15,12 +15,14 @@ type Task = {
 type ThemeTyes={
   newBackgroundColor:string,
   newTextColor:string,
-  newWhiteColor:string
+  newWhiteColor:string,
+  themeIcon?:string
 
 }
 let newBackgroundColor = '';
 let newTextColor = '';
 let newWhiteColor = '';
+let themeIcon=''
 function loadTasks(): Task[] {
   const storedItems = localStorage.getItem("tasks");
   return storedItems ? JSON.parse(storedItems) : [];
@@ -40,6 +42,8 @@ taskForm?.addEventListener("submit", createTask);
 // Functions definitions
 function themeFromLocalStorage() {
   const storedTheme = getThemeFromLocalStorage();
+  console.log({storedTheme});
+  
   if (root !== null) {
     if (storedTheme) {
       root.style.setProperty(
@@ -48,6 +52,15 @@ function themeFromLocalStorage() {
       );
       root.style.setProperty("--text-color", storedTheme?.newTextColor);
       root.style.setProperty("--white", storedTheme?.newWhiteColor);
+      if (storedTheme?.themeIcon === "fa-moon") {
+        iconToggle?.classList.remove("fa-sun");
+      }
+      if (storedTheme?.themeIcon === "fa-sun") {
+        iconToggle?.classList.remove("fa-moon");
+      }
+      // iconToggle?.classList.remove(storedTheme?.themeIcon === "fa-moon" ? "fa-sun" : "fa-moon");
+
+      iconToggle?.classList.add(storedTheme?.themeIcon as string)
       return;
     }
   }
@@ -80,14 +93,19 @@ function toggleTheme(event: Event): void {
       iconToggle?.classList.remove('fa-sun'); // Remove sun icon
       iconToggle?.classList.add('fa-moon'); // Add moon icon
     }
-
+    const IconClass= iconToggle?.getAttribute('class')?.split(' ')[3] // Add moon icon
+    console.log(IconClass);
+    
     // Update CSS variables
    
     const themevalues={
       newBackgroundColor,
       newTextColor,
-      newWhiteColor
+      newWhiteColor,
+      themeIcon:IconClass
     }
+    console.log(themevalues);
+    
     UpdateThemeLocalStorage(themevalues)
   }
 }
@@ -155,7 +173,7 @@ const generateUniqueId = () => {
   return uniqueId + timestamp;
 };
 
-function getThemeFromLocalStorage(): ThemeTyes | ThemeTyes {
+function getThemeFromLocalStorage(): ThemeTyes {
   const storedItems = localStorage.getItem("theme");
   return storedItems ? JSON.parse(storedItems) : [];
 }
