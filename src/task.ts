@@ -30,7 +30,7 @@ function createTask(event: SubmitEvent) {
     formInput.value = "";
     return "";
   }
-  alert("Please enter a task description");
+  alert("Please enter task description");
 }
 iconToggle?.addEventListener("click", toggleTheme);
 
