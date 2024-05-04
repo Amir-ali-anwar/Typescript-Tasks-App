@@ -16,6 +16,7 @@ html {
 
 :root {
   /* colors */
+  --clr-primary: #d23669;
   --primary-100: #e2e0ff;
   --primary-200: #c1beff;
   --primary-300: #a29dff;
@@ -191,6 +192,7 @@ ul {
   border-bottom-left-radius: var(--border-radius);
   background: var(--background-color);
   border: 1px solid var(--grey-200);
+  color: var(--clr-primary);
 }
 
 main {

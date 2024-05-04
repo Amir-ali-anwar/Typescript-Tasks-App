@@ -36,8 +36,33 @@ iconToggle?.addEventListener("click", toggleTheme);
 
 function toggleTheme(event: Event): void {
   event.stopPropagation();
-  if (root!==null) {
+  if (root !== null) {
     const rootStyles = getComputedStyle(root);
+    const currentBackgroundColor = rootStyles.getPropertyValue('--background-color').trim();
+    
+    let newBackgroundColor = '';
+    let newTextColor = '';
+    let newWhiteColor = '';
+
+    // Toggle between light and dark themes
+    if (currentBackgroundColor === '#f8fafc') {
+      newBackgroundColor = '#282c35'; // Dark background
+      newTextColor = '#fff'; // Light text
+      newWhiteColor = '#282c35'; // White color
+      iconToggle?.classList.remove('fa-moon'); // Remove moon icon
+      iconToggle?.classList.add('fa-sun'); // Add sun icon
+    } else {
+      newBackgroundColor = '#f8fafc'; // Light background
+      newTextColor = '#0f172a'; // Dark text
+      newWhiteColor = '#fff'; // White color
+      iconToggle?.classList.remove('fa-sun'); // Remove sun icon
+      iconToggle?.classList.add('fa-moon'); // Add moon icon
+    }
+
+    // Update CSS variables
+    root.style.setProperty('--background-color', newBackgroundColor);
+    root.style.setProperty('--text-color', newTextColor);
+    root.style.setProperty('--white', newWhiteColor);
   }
 }
 
