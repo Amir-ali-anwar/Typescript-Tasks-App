@@ -140,13 +140,19 @@ function renderTask(task: Task): void {
   const taskElement = document.createElement("li");
   const taskElementParagparh = document.createElement("p");
   const iconElement = document.createElement("i");
+  const EditiconElement = document.createElement("i");
+  const listElementParagraph = document.createElement("div");
+  listElementParagraph.setAttribute('class','spacess')
+  taskElement.appendChild(listElementParagraph)
   taskElement.setAttribute('data-task-id', task.id as string);
-  taskElement.appendChild(taskElementParagparh);
   iconElement.setAttribute("class", "fa-solid fa-trash");
-  taskElement.appendChild(iconElement);
+  EditiconElement.setAttribute("class", "fa-solid fa-edit");
+  taskElement.appendChild(taskElementParagparh);
   taskElementParagparh.textContent = task.description;
   taskListElement?.appendChild(taskElement);
   taskListElement?.appendChild(taskElement);
+  listElementParagraph?.appendChild(EditiconElement);
+  listElementParagraph?.appendChild(iconElement);
   iconElement.addEventListener('click',()=>deleteTask(task))
 }
 
