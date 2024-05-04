@@ -27,31 +27,17 @@ function loadTasks(): Task[] {
 }
 const tasks: Task[] = loadTasks();
 tasks.forEach(renderTask);
-function createTask(event: SubmitEvent) {
-  event.preventDefault();
-  const taskDescription = formInput.value;
-  if (taskDescription) {
-    const task: Task = {
-      description: taskDescription,
-      isCompleted: false,
-      id:generateUniqueId()
-    };
-    addTask(task);
-    renderTask(task);
-    updateStorage();
-    formInput.value = "";
-    return "";
-  }
-  Swal.fire({
-    icon: "error",
-    title: "Oops...",
-    text: "Please Enter the Task description!",
-  });
-}
+
 iconToggle?.addEventListener("click", toggleTheme);
 
+document.addEventListener("DOMContentLoaded", () => {
+  themeFromLocalStorage();
+  loadTasks()
+});
 
+taskForm?.addEventListener("submit", createTask);
 
+// Functions definitions
 function themeFromLocalStorage() {
   const storedTheme = getThemeFromLocalStorage();
   if (root !== null) {
@@ -66,8 +52,6 @@ function themeFromLocalStorage() {
     }
   }
 }
-document.addEventListener('DOMContentLoaded',themeFromLocalStorage)
-
 function toggleTheme(event: Event): void {
   event.stopPropagation();
 
@@ -110,13 +94,35 @@ function toggleTheme(event: Event): void {
 
 function addTask(task: Task): void {
   console.log(task);
-
   tasks.push(task);
+}
+
+function createTask(event: SubmitEvent) {
+  event.preventDefault();
+  const taskDescription = formInput.value;
+  if (taskDescription) {
+    const task: Task = {
+      description: taskDescription,
+      isCompleted: false,
+      id:generateUniqueId()
+    };
+    addTask(task);
+    renderTask(task);
+    updateStorage();
+    formInput.value = "";
+    return "";
+  }
+  Swal.fire({
+    icon: "error",
+    title: "Oops...",
+    text: "Please Enter the Task description!",
+  });
 }
 function renderTask(task: Task): void {
   const taskElement = document.createElement("li");
   const taskElementParagparh = document.createElement("p");
   const iconElement = document.createElement("i");
+  taskElement.setAttribute('data-task-id', task.id as string);
   taskElement.appendChild(taskElementParagparh);
   iconElement.setAttribute("class", "fa-solid fa-trash");
   taskElement.appendChild(iconElement);
@@ -126,14 +132,17 @@ function renderTask(task: Task): void {
   iconElement.addEventListener('click',()=>deleteTask(task))
 }
 
-function deleteTask(taskId:Task):void{
-  
-}
-function updateStorage(): void {
-  localStorage.setItem("tasks", JSON.stringify(tasks));
-}
-function UpdateThemeLocalStorage(theme:ThemeTyes):void{
-  localStorage.setItem('theme', JSON.stringify(theme))
+function deleteTask(taskId: Task): void {
+  const tasks = loadTasks();
+  const filteredItems = tasks.filter((task) => task.id !== taskId.id);
+  localStorage.setItem("tasks", JSON.stringify(filteredItems));
+  const taskElement = taskListElement?.querySelector(
+    `li[data-task-id="${taskId.id}"]`
+  );
+  if (taskElement) {
+    taskListElement?.removeChild(taskElement);
+  }
+  return;
 }
 
 
@@ -150,4 +159,12 @@ function getThemeFromLocalStorage(): ThemeTyes | ThemeTyes {
   const storedItems = localStorage.getItem("theme");
   return storedItems ? JSON.parse(storedItems) : [];
 }
-taskForm?.addEventListener("submit", createTask);
+
+function updateStorage(): void {
+  localStorage.setItem("tasks", JSON.stringify(tasks));
+}
+function UpdateThemeLocalStorage(theme:ThemeTyes):void{
+  localStorage.setItem('theme', JSON.stringify(theme))
+}
+
+
