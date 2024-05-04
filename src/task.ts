@@ -10,6 +10,7 @@ const root = document.querySelector<HTMLElement>(":root");
 type Task = {
   description: string;
   isCompleted: boolean;
+  id?:number | string
 };
 type ThemeTyes={
   newBackgroundColor:string,
@@ -33,6 +34,7 @@ function createTask(event: SubmitEvent) {
     const task: Task = {
       description: taskDescription,
       isCompleted: false,
+      id:generateUniqueId()
     };
     addTask(task);
     renderTask(task);
@@ -121,6 +123,11 @@ function renderTask(task: Task): void {
   taskElementParagparh.textContent = task.description;
   taskListElement?.appendChild(taskElement);
   taskListElement?.appendChild(taskElement);
+  iconElement.addEventListener('click',()=>deleteTask(task))
+}
+
+function deleteTask(taskId:Task):void{
+  
 }
 function updateStorage(): void {
   localStorage.setItem("tasks", JSON.stringify(tasks));
@@ -128,6 +135,17 @@ function updateStorage(): void {
 function UpdateThemeLocalStorage(theme:ThemeTyes):void{
   localStorage.setItem('theme', JSON.stringify(theme))
 }
+
+
+const generateUniqueId = () => {
+  const randomBytes = new Uint8Array(5);
+  window.crypto.getRandomValues(randomBytes);
+  const uniqueId = Array.from(randomBytes).map(byte => byte.toString(16).padStart(2, '0')).join('');
+  const timestamp = Date.now().toString(16).padStart(12, '0');
+
+  return uniqueId + timestamp;
+};
+
 function getThemeFromLocalStorage(): ThemeTyes | ThemeTyes {
   const storedItems = localStorage.getItem("theme");
   return storedItems ? JSON.parse(storedItems) : [];
